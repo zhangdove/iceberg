@@ -27,8 +27,10 @@ import java.nio.file.Path;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Stream;
+import org.apache.commons.io.FileUtils;
 import org.apache.iceberg.aws.AwsProperties;
 import org.apache.iceberg.relocated.com.google.common.collect.ImmutableMap;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -83,6 +85,11 @@ public class S3OutputStreamTest {
   @Before
   public void before() {
     s3.createBucket(CreateBucketRequest.builder().bucket(BUCKET).build());
+  }
+
+  @After
+  public void after() throws IOException {
+    FileUtils.deleteDirectory(tmpDir.toFile());
   }
 
   @Test

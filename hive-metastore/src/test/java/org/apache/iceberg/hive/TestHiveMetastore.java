@@ -29,6 +29,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -131,7 +132,11 @@ public class TestHiveMetastore {
       executorService.shutdown();
     }
     if (hiveLocalDir != null) {
-      hiveLocalDir.delete();
+      try {
+        FileUtils.deleteDirectory(hiveLocalDir);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
     if (baseHandler != null) {
       baseHandler.shutdown();

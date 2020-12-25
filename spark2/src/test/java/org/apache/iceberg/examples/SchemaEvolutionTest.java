@@ -180,6 +180,7 @@ public class SchemaEvolutionTest {
     floatTable.updateSchema().updateColumn("float", Types.DoubleType.get()).commit();
 
     log.info("Promote float type to double type:\n" + floatTable.schema().toString());
+    FileUtils.deleteDirectory(location);
   }
 
   @Test
@@ -193,6 +194,7 @@ public class SchemaEvolutionTest {
     decimalTable.updateSchema().updateColumn("decimal", Types.DecimalType.of(4, 2)).commit();
 
     log.info("Widen decimal type:\n" + decimalTable.schema().toString());
+    FileUtils.deleteDirectory(location);
   }
 
   @Test

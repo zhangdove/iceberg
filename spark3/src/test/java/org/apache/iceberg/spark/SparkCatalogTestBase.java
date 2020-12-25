@@ -22,6 +22,7 @@ package org.apache.iceberg.spark;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
 import org.apache.iceberg.catalog.Catalog;
 import org.apache.iceberg.catalog.Namespace;
 import org.apache.iceberg.catalog.SupportsNamespaces;
@@ -47,9 +48,9 @@ public abstract class SparkCatalogTestBase extends SparkTestBase {
   }
 
   @AfterClass
-  public static void dropWarehouse() {
+  public static void dropWarehouse() throws IOException {
     if (warehouse != null && warehouse.exists()) {
-      warehouse.delete();
+      FileUtils.deleteDirectory(warehouse);
     }
   }
 
