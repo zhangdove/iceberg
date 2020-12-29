@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -96,7 +97,36 @@ public class TestFlinkHiveCatalog extends FlinkTestBase {
     Assert.assertEquals("Should have a .crc file and a .parquet file", 2, Files.list(dataPath).count());
 
     sql("DROP TABLE test_table");
-    sql("DROP DATABASE test_db");
-    sql("DROP CATALOG test_catalog");
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("[before status] ");
+    checkStatus(buffer);
+    try {
+      sql("DROP DATABASE test_db");
+      sql("DROP CATALOG test_catalog");
+    } catch (Exception e) {
+      buffer.append("\n[after status] ");
+      checkStatus(buffer);
+      throw new RuntimeException(buffer.toString(), e);
+    }
+  }
+
+  private void checkStatus(StringBuffer buffer) {
+    List<Object[]> tableList = sql("show tables");
+    tableList.size();
+    buffer.append("table count:").append(tableList.size()).append("\t");
+    for (Object[] tab : tableList) {
+      buffer.append("object length:").append(tab.length).append("\t");
+      for (Object obj : tab) {
+        buffer.append("table:").append(obj.toString()).append("\t");
+      }
+      buffer.append("; ");
+    }
+    List<Object[]> databaseList = sql("show databases");
+    for (Object[] db : databaseList) {
+      for (Object obj : db) {
+        buffer.append("database:").append(obj).append("\t");
+      }
+      buffer.append("; ");
+    }
   }
 }
